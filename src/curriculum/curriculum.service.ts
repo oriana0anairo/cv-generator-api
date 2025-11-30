@@ -7,7 +7,7 @@ export class CurriculumService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateCurriculumDto) {
-    // 1. Guardamos el CV
+    // 1. Guardar el nuevo CV
     await this.prisma.curriculum.create({
       data: {
         title: dto.title ?? null,
@@ -15,17 +15,23 @@ export class CurriculumService {
       },
     });
 
-    // 2. Contar cuántos existen
+    // 2. Contar cuántos hay
     const count = await this.prisma.curriculum.count();
 
-    // 3. Si hay más de 10, borrar los más antiguos
+    // 3. Si hay más de 10 → borrar los más viejos
     if (count > 10) {
       const toDelete = count - 10;
 
-      await this.prisma.curriculum.deleteMany({
-        where: {},
+      // Obtener los más antiguos
+      const oldOnes = await this.prisma.curriculum.findMany({
         orderBy: { createdAt: 'asc' },
         take: toDelete,
+        select: { id: true },
+      });
+
+      // Borrarlos por ID
+      await this.prisma.curriculum.deleteMany({
+        where: { id: { in: oldOnes.map((c) => c.id) } },
       });
     }
 
