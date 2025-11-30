@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    container_name: orderhub_db
+    environment:
+      POSTGRES_USER: orderhub
+      POSTGRES_PASSWORD: orderhub
+      POSTGRES_DB: orderhub
+    ports: ['5432:5432']
+    volumes: [db_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U orderhub']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: orderhub_redis
+    ports: ['6379:6379']
+
+volumes:
+  db_data:
