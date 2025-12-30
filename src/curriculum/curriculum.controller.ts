@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CurriculumService } from './curriculum.service';
 import { CreateCurriculumDto } from './dto/create-curriculum.dto';
 
@@ -14,5 +14,10 @@ export class CurriculumController {
   @Get()
   findAll() {
     return this.curriculumService.findLastTen();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.curriculumService.findOneById(id);
   }
 }

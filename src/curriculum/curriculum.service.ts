@@ -44,4 +44,10 @@ export class CurriculumService {
       take: 10,
     });
   }
+
+  async findOneById(id: string) {
+    return this.prisma.curriculum.findUnique({
+      where: { id },
+    });
+  }
 }
