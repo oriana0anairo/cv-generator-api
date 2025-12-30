@@ -8,7 +8,7 @@ export class CurriculumService {
 
   async create(dto: CreateCurriculumDto) {
     // 1. Guardar el nuevo CV
-    await this.prisma.curriculum.create({
+    const curriculum = await this.prisma.curriculum.create({
       data: {
         title: dto.title ?? null,
         data: dto.data,
@@ -35,7 +35,7 @@ export class CurriculumService {
       });
     }
 
-    return { message: 'Curriculum guardado correctamente' };
+    return { message: 'Curriculum guardado correctamente', id: curriculum.id };
   }
 
   async findLastTen() {
